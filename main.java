@@ -1,4 +1,5 @@
-import java.util.Scanner; 
+import java.util.Scanner;
+import java.util.Random;
 public class main {
 
     static int occu = 0;
@@ -6,54 +7,17 @@ public class main {
 
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
-        int user1, user2;
+        System.out.println("Choose an option:\n1. 1v1\n2. You vs Computer");
+        int isComp = s.nextInt();
+        clearScreen();
         String[] board = {"_", "_", "_", "_", "_", "_", "_", "_", "_"};
                     
         //print board;
         printboard(board);
         while (!gameEnd) {
-            //userInput
-            boolean valid1 = false;
-            while (!valid1 && !gameEnd) {
-                System.out.print("player1 pos: ");
-                user1 = s.nextInt();
-                if (board[user1 - 1].equals("_")) {
-                    valid1 = true;
-                    board[user1 - 1] = "O";
-                    occu++;
-                    cheackwin(board);
-                    clearScreen();
-                    printboard(board);
-                } else {
-                    //not valid
-                    valid1 = false;
-                    clearScreen();
-                    System.out.println("invaid pos, try again: ");
-                    printboard(board);
-                }
-            }
-
-            boolean valid2 = false;
-            while (!valid2 && !gameEnd) {
-                System.out.print("player2 pos: ");
-                user2 = s.nextInt();
-                if (board[user2 - 1].equals("_")) {
-                    valid2 = true;
-                    board[user2 - 1] = "X";
-                    occu++;
-                    cheackwin(board);
-                    clearScreen();
-                    printboard(board);
-                } else {
-                    //not valid
-                    valid2 = false;
-                    clearScreen();
-                    System.out.println("invaid pos, try again: ");
-                    printboard(board);
-                }
-     
-            }
-
+            takeTurn(1, "O", board, s,0);
+            if (gameEnd) break;
+            takeTurn(2, "X", board, s, isComp);
         }
         s.close();
         cheackwin(board);
@@ -117,6 +81,35 @@ public class main {
 
         return "D";
     }
+    public static void takeTurn(int player, String symbol, String[] board, Scanner s, int isComp) {
+        boolean valid = false;
+        int pos;
+        while (!valid && !gameEnd) {
+            if (isComp == 2) {
+                System.out.print("Computer pos: ");
+                Random rand = new Random();
+                pos = rand.nextInt(9) + 1; 
+            }
+            else {
+                System.out.print("Player " + player + " pos: ");
+                pos = s.nextInt();
+            }
+
+            if (board[pos - 1].equals("_")) {
+                valid = true;
+                board[pos - 1] = symbol;
+                occu++;
+                cheackwin(board);
+                clearScreen();
+                printboard(board);
+            } else {
+                clearScreen();
+                System.out.println("Invalid pos, try again: ");
+                printboard(board);
+            }
+        }
+}
+
 
     public final static void clearScreen() {
         try {
